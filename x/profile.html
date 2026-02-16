@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>AgriSmart — Profile</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="insertHeader"></div>
+  <main class="container">
+    <div class="card" id="profileCard">
+      <h2>Profile</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label>Full name</label>
+          <input id="profileName">
+        </div>
+        <div>
+          <label>Email</label>
+          <input id="profileEmail" disabled>
+        </div>
+        <div>
+          <label>Location</label>
+          <input id="profileLocation">
+        </div>
+        <div>
+          <label>Farm size</label>
+          <input id="profileSize">
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn primary" onclick="saveProfile()">Save Changes</button>
+        <button class="btn" onclick="signOut()">Logout</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Saved Predictions</h3>
+      <div id="savedPred"></div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Booking History</h3>
+      <div id="bookingHist"></div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    const curr = ensureAuth()
+    document.getElementById('profileName').value = curr.name
+    document.getElementById('profileEmail').value = curr.email
+    document.getElementById('profileLocation').value = curr.profile?.farm || ''
+    document.getElementById('profileSize').value = curr.profile?.size || ''
+
+    function saveProfile(){
+      const users = getUsers()
+      const u = users.find(x=>x.email===curr.email)
+      u.name = document.getElementById('profileName').value.trim()
+      u.profile = {farm: document.getElementById('profileLocation').value.trim(), size: document.getElementById('profileSize').value.trim()}
+      saveUsers(users)
+      toast('Profile updated')
+      location.reload()
+    }
+
+    // saved predictions
+    const sp = JSON.parse(localStorage.getItem('savedPredictions')||'[]')
+    document.getElementById('savedPred').innerHTML = sp.length ? sp.map(s=>`<div style="padding:8px 0"><strong>${s.crop}</strong> — ${s.date}</div>`).join('') : '<div class="muted">No saved predictions</div>'
+
+    // bookings
+    const bookings = JSON.parse(localStorage.getItem('bookings')||'[]')
+    document.getElementById('bookingHist').innerHTML = bookings.length ? bookings.map(b=>`<div style="padding:8px 0"><strong>${b.item}</strong> • ${b.dates} • <span style="background:#efefef;padding:6px;border-radius:8px">${b.cost ? '₹'+b.cost : '—'}</span></div>`).join('') : '<div class="muted">No bookings</div>'
+  </script>
+</body>
+</html>

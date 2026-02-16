@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AgriSmart — Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="insertHeader"></div>
+
+  <main class="container" id="main">
+    <!-- Hero: important, action first -->
+    <section id="hero" class="card" style="display:flex;justify-content:space-between;align-items:flex-start;gap:18px">
+      <div>
+        <h2 id="heroTitle">Welcome back, Farmer</h2>
+        <p id="heroSummary" class="muted">Your farm status at a glance</p>
+        <div style="display:flex;gap:12px;margin-top:12px">
+          <button class="btn primary" onclick="navigateTo('predictions.html')">Start Prediction</button>
+          <button class="btn alt" onclick="navigateTo('marketplace.html')">Rent Equipment</button>
+        </div>
+      </div>
+
+      <div style="min-width:220px">
+        <div class="card" style="padding:12px;margin-bottom:10px">
+          <div style="font-weight:700">Today's weather</div>
+          <div class="muted" id="weatherBox">Loading…</div>
+        </div>
+        <div class="card" style="padding:12px">
+          <div style="font-weight:700">Farm priority</div>
+          <div id="priorityBox" class="muted">Loading…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI row -->
+    <section class="kpis">
+      <div class="kpi card">
+        <div>
+          <div class="muted">Total Crops</div>
+          <div style="font-size:22px;font-weight:700" id="kCrops">--</div>
+        </div>
+      </div>
+      <div class="kpi card">
+        <div>
+          <div class="muted">Active Predictions</div>
+          <div style="font-size:22px;font-weight:700" id="kPred">--</div>
+        </div>
+      </div>
+      <div class="kpi card">
+        <div>
+          <div class="muted">Equipment Bookings</div>
+          <div style="font-size:22px;font-weight:700" id="kBook">--</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panels -->
+    <section style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+      <div>
+        <div class="card">
+          <h3>Price Trend (Wheat)</h3>
+          <canvas id="priceChart" height="160"></canvas>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Activity</h3>
+          <ul class="timeline" id="activityList"></ul>
+        </div>
+      </div>
+
+      <div>
+        <div id="mapPanel" class="card" style="height:300px;padding:8px">
+          <h3 style="margin-top:0">Fields</h3>
+          <div id="map" style="height:220px;border-radius:8px"></div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Smart Recommendation</h3>
+          <div id="aiAdvice">Loading suggestions…</div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn" onclick="generateAdvice()">New</button>
+            <button class="btn" onclick="saveAdvice()">Save</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

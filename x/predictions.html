@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>AgriSmart — Predictions</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="insertHeader"></div>
+  <main class="container">
+    <div class="card">
+      <h2>Predictions</h2>
+      <p class="muted">Choose a crop and location to generate a quick market and demand estimate (demo)</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
+        <div>
+          <label>Crop</label>
+          <select id="cropSelect">
+            <option value="wheat">Wheat</option>
+            <option value="rice">Rice</option>
+            <option value="tomato">Tomato</option>
+          </select>
+        </div>
+        <div>
+          <label>Location</label>
+          <select id="locSelect">
+            <option value="indore">Indore (MP)</option>
+            <option value="ludhiana">Ludhiana (Punjab)</option>
+          </select>
+        </div>
+        <div>
+          <label>Harvest date</label>
+          <input id="harvestDate" type="date">
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn primary" onclick="runPrediction()">Run prediction</button>
+        <button class="btn" onclick="savePrediction()">Save</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div class="card">
+        <h3>Price Forecast</h3>
+        <canvas id="priceForecast"></canvas>
+      </div>
+      <div class="card">
+        <h3>Demand Forecast</h3>
+        <canvas id="demandForecast"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="predictions.js"></script>
+</body>
+</html>
