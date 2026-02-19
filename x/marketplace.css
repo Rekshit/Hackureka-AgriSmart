@@ -1,0 +1,145 @@
+/* ---------- GENERAL ---------- */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f0f7e0;
+}
+
+.container {
+  padding: 25px 40px;
+}
+
+h1 {
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: gray;
+  margin-bottom: 20px;
+}
+
+/* ---------- FILTER BAR ---------- */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.filters input,
+.filters select,
+.filters button {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5c0;
+  font-size: 14px;
+  background: #f0f7e0;
+}
+
+.filters button {
+  cursor: pointer;
+}
+
+/* ---------- GRID ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ---------- CARD ---------- */
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* IMAGE PLACEHOLDER */
+.card-img {
+  height: 220px;
+  background: #e9ede2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 45px;
+}
+
+/* CONTENT */
+.card-content {
+  padding: 15px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+.available {
+  background: #d4edda;
+  color: green;
+}
+
+.booked {
+  background: #f8d7da;
+  color: red;
+}
+
+.maintenance {
+  background: #eee;
+  color: gray;
+}
+
+.desc {
+  font-size: 13px;
+  color: gray;
+  margin: 6px 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.price {
+  font-weight: bold;
+  color: green;
+}
+
+.book-btn {
+  background: #2f7d32;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.book-btn:disabled {
+  background: #b0c7ad;
+  cursor: not-allowed;
+}
