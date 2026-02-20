@@ -27,7 +27,7 @@ body{margin:0;background:var(--bg);color:#123;}
 .card{background:var(--card);padding:var(--pad);border-radius:var(--radius);box-shadow:0 6px 18px rgba(0,0,0,0.04);}
 
 /* KPI row */
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0}
 .kpi{display:flex;align-items:center;gap:12px;padding:16px;border-radius:12px;background:linear-gradient(180deg,#f7fbf7,#f0f6f0)}
 
 /* quick actions */
