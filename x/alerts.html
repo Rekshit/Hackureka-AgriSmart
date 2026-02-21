@@ -29,26 +29,101 @@
 
   <script src="app.js"></script>
   <script>
-    ensureAuth()
-    const localDemo = JSON.parse(localStorage.getItem('agri_demo')||'{}')
-    function renderAlerts(){
-      const container = document.getElementById('alertsList'); container.innerHTML = ''
-      (localDemo.alerts||[]).forEach(a=>{
-        const el = document.createElement('div'); el.className='card'; el.style.marginBottom='10px'
-        el.innerHTML = `<div style="display:flex;align-items:flex-start;gap:12px">
-          <div style="font-size:20px">⚠️</div>
-          <div style="flex:1"><div style="font-weight:700">${a.title} <span class="muted" style="font-weight:600;margin-left:8px;color:${a.sev==='high'?'#d9534f':a.sev==='med'?'#f0ad4e':'#5cb85c'}">${a.sev}</span></div>
-          <div class="muted">${a.text}</div>
-          <div class="muted" style="margin-top:8px">${new Date(a.ts).toLocaleString()}</div></div>
-          <div><button class="btn" onclick="dismiss(${a.id})">Dismiss</button></div>
-        </div>`
-        container.appendChild(el)
-      })
+    try { ensureAuth() } catch(e) { console.error('Auth failed:', e); location.href='auth.html' }
+    
+    let localDemo = {}
+    try {
+      localDemo = JSON.parse(localStorage.getItem('agri_demo')||'{}')
+    } catch(e) {
+      console.error('Error parsing demo data:', e)
+      localDemo = {}
     }
+    
+    function renderAlerts(){
+      try {
+        const container = document.getElementById('alertsList')
+        if(!container) return
+        container.innerHTML = ''
+        
+        const alerts = localDemo.alerts || []
+        if(alerts.length === 0) {
+          container.innerHTML = '<div class="muted">No alerts at this time</div>'
+          return
+        }
+        
+        alerts.forEach(a=>{
+          try {
+            if(!a || !a.id) return
+            const el = document.createElement('div')
+            el.className='card'
+            el.style.marginBottom='10px'
+            
+            const severity = a.sev || 'med'
+            const severityColor = severity==='high'?'#d9534f':severity==='med'?'#f0ad4e':'#5cb85c'
+            
+            el.innerHTML = `<div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="font-size:20px">⚠️</div>
+              <div style="flex:1">
+                <div style="font-weight:700">${a.title || 'Alert'} <span class="muted" style="font-weight:600;margin-left:8px;color:${severityColor}">${severity}</span></div>
+                <div class="muted">${a.text || 'No description'}</div>
+                <div class="muted" style="margin-top:8px">${new Date(a.ts || Date.now()).toLocaleString()}</div>
+              </div>
+              <div><button class="btn" onclick="dismiss(${a.id})">Dismiss</button></div>
+            </div>`
+            container.appendChild(el)
+          } catch(e) {
+            console.error('Error rendering alert:', a, e)
+          }
+        })
+      } catch(e) {
+        console.error('Render alerts error:', e)
+      }
+    }
+    
     renderAlerts()
+    
     function dismiss(id){
-      const a = localDemo.alerts || []; localDemo.alerts = a.filter(x=>x.id!==id)
-      localStorage.setItem('agri_demo', JSON.stringify(localDemo)); renderAlerts(); toast('Alert dismissed')
+      try {
+        if(!id) return
+        const a = localDemo.alerts || []
+        localDemo.alerts = a.filter(x=>x.id!==id)
+        localStorage.setItem('agri_demo', JSON.stringify(localDemo))
+        renderAlerts()
+        toast('Alert dismissed')
+      } catch(e) {
+        console.error('Dismiss error:', e)
+        toast('Failed to dismiss alert', 3000)
+      }
+    }
+    
+    // Alert settings handlers
+    try {
+      const pestToggle = document.getElementById('pestToggle')
+      const weatherToggle = document.getElementById('weatherToggle')
+      const priceToggle = document.getElementById('priceToggle')
+      
+      if(pestToggle) pestToggle.addEventListener('change', () => {
+        try {
+          localStorage.setItem('pestAlerts', pestToggle.checked)
+          toast('Pest alerts ' + (pestToggle.checked ? 'enabled' : 'disabled'))
+        } catch(e) { console.error('Error:', e) }
+      })
+      
+      if(weatherToggle) weatherToggle.addEventListener('change', () => {
+        try {
+          localStorage.setItem('weatherAlerts', weatherToggle.checked)
+          toast('Weather alerts ' + (weatherToggle.checked ? 'enabled' : 'disabled'))
+        } catch(e) { console.error('Error:', e) }
+      })
+      
+      if(priceToggle) priceToggle.addEventListener('change', () => {
+        try {
+          localStorage.setItem('priceAlerts', priceToggle.checked)
+          toast('Price alerts ' + (priceToggle.checked ? 'enabled' : 'disabled'))
+        } catch(e) { console.error('Error:', e) }
+      })
+    } catch(e) {
+      console.error('Settings init error:', e)
     }
   </script>
 </body>

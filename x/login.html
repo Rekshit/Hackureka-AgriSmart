@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AgriSmart — Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="brand"><span class="leaf">🌱</span> <strong>AgriSmart</strong></div>
+      <p class="muted">Smart farming dashboard — demo</p>
+
+      <div class="tabs">
+        <button id="tab-login" class="tab active">Login</button>
+        <button id="tab-signup" class="tab">Sign up</button>
+      </div>
+
+      <form id="login-form" class="form">
+        <label>Email</label>
+        <input id="login-email" type="email" placeholder="farmer@example.com" required>
+        <label>Password</label>
+        <input id="login-password" type="password" placeholder="password" required>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+
+      <form id="signup-form" class="form hidden">
+        <label>Full name</label>
+        <input id="signup-name" placeholder="Rajesh Kumar" required>
+        <label>Email</label>
+        <input id="signup-email" type="email" placeholder="farmer@example.com" required>
+        <label>Password</label>
+        <input id="signup-password" type="password" placeholder="password" required>
+        <button class="primary" type="submit">Create account</button>
+      </form>
+      <div class="help muted">This is a demo. Accounts are stored locally in your browser.</div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // login/signup UI hookup
+    document.getElementById('tab-login').onclick = ()=> { showLogin() }
+    document.getElementById('tab-signup').onclick = ()=> { showSignup() }
+
+    const loginForm = document.getElementById('login-form')
+    const signupForm = document.getElementById('signup-form')
+
+    function showLogin(){
+      document.getElementById('tab-login').classList.add('active')
+      document.getElementById('tab-signup').classList.remove('active')
+      loginForm.classList.remove('hidden'); signupForm.classList.add('hidden')
+    }
+    function showSignup(){
+      document.getElementById('tab-signup').classList.add('active')
+      document.getElementById('tab-login').classList.remove('active')
+      signupForm.classList.remove('hidden'); loginForm.classList.add('hidden')
+    }
+
+    // handle login
+    loginForm.addEventListener('submit', (e)=> {
+      e.preventDefault()
+      try {
+        const email = document.getElementById('login-email').value.trim()
+        const pw = document.getElementById('login-password').value
+        
+        if(!email || !pw) { alert('Please fill all fields'); return }
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter valid email'); return }
+        
+        const ok = authSignIn(email, pw)
+        if(ok) location.href = 'dashboard.html'
+        else alert('Invalid email or password. Try signing up first.')
+      } catch(e) {
+        console.error('Login error:', e)
+        alert('Login failed. Please try again.')
+      }
+    })
+
+    // handle signup
+    signupForm.addEventListener('submit', (e)=> {
+      e.preventDefault()
+      try {
+        const name = document.getElementById('signup-name').value.trim()
+        const email = document.getElementById('signup-email').value.trim()
+        const pw = document.getElementById('signup-password').value
+        
+        if(!name || !email || !pw) { alert('Please fill all fields'); return }
+        if(name.length < 3) { alert('Name must be at least 3 characters'); return }
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter valid email'); return }
+        if(pw.length < 6) { alert('Password must be at least 6 characters'); return }
+        
+        const ok = authSignUp(name, email, pw)
+        if(ok){ alert('Account created successfully! Signing you in...'); location.href='dashboard.html' }
+        else alert('This email already has an account.')
+      } catch(e) {
+        console.error('Signup error:', e)
+        alert('Signup failed. Please try again.')
+      }
+    })
+
+    // show login by default
+    showLogin()
+  </script>
+</body>
+</html>

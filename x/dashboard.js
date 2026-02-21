@@ -1,6 +1,11 @@
 // ensure user
-const user = ensureAuth()
-document.getElementById('heroTitle').textContent = `Good morning, ${user.name.split(' ')[0]}!`
+try {
+  const user = ensureAuth()
+  document.getElementById('heroTitle').textContent = `Good morning, ${user.name.split(' ')[0]}!`
+} catch(e) {
+  console.error('User not authenticated:', e)
+  location.href='auth.html'
+}
 
 // --- mock initial data if absent ---
 if(!localStorage.getItem('agri_demo')){
@@ -21,68 +26,122 @@ if(!localStorage.getItem('agri_demo')){
   }
   localStorage.setItem('agri_demo', JSON.stringify(demo))
 }
-const demo = JSON.parse(localStorage.getItem('agri_demo'))
+let demo = {}
+try {
+  demo = JSON.parse(localStorage.getItem('agri_demo'))
+} catch(e) {
+  console.error('Error parsing demo data:', e)
+}
 
 // fill kpis
-document.getElementById('kCrops').textContent = 12
-document.getElementById('kPred').textContent = 8
-document.getElementById('kBook').textContent = demo.bookings.length
+try {
+  document.getElementById('kCrops').textContent = 12
+  document.getElementById('kPred').textContent = 8
+  document.getElementById('kBook').textContent = demo.bookings ? demo.bookings.length : 0
+} catch(e) {
+  console.error('Error filling KPIs:', e)
+}
 
 // load weather (mock)
 function refreshWeather(){
-  document.getElementById('weatherBox').innerHTML = '<strong>28°C</strong> • Humidity 65% • Partly cloudy'
+  try {
+    const weatherBox = document.getElementById('weatherBox')
+    if(weatherBox) weatherBox.innerHTML = '<strong>28°C</strong> • Humidity 65% • Partly cloudy'
+  } catch(e) {
+    console.error('Error loading weather:', e)
+  }
 }
 refreshWeather()
 
 // activity
 function renderActivity(){
-  const act = demo.activity || []
-  const ul = document.getElementById('activityList'); ul.innerHTML = ''
-  act.forEach(a=>{
-    const li = document.createElement('li')
-    li.innerHTML = `<div><strong>${a.t}</strong><div class="muted">${new Date(a.ts).toLocaleString()}</div></div>`
-    ul.appendChild(li)
-  })
+  try {
+    const act = demo.activity || []
+    const ul = document.getElementById('activityList')
+    if(!ul) return
+    ul.innerHTML = ''
+    act.forEach(a=>{
+      const li = document.createElement('li')
+      li.innerHTML = `<div><strong>${a.t || 'Activity'}</strong><div class="muted">${new Date(a.ts).toLocaleString()}</div></div>`
+      ul.appendChild(li)
+    })
+  } catch(e) {
+    console.error('Error rendering activity:', e)
+  }
 }
 renderActivity()
 
 // Price chart
-const priceCtx = document.getElementById('priceChart')
-const priceChart = new Chart(priceCtx, {
-  type:'line',
-  data:{
-    labels:['Jan','Feb','Mar','Apr','May','Jun'],
-    datasets:[{label:'Wheat ₹/qtl', data:demo.prices.wheat, borderColor:'#2e7d32', backgroundColor:'rgba(46,125,50,0.08)', tension:0.3}]
-  },
-  options:{plugins:{legend:{display:false}}}
-})
+try {
+  const priceCtx = document.getElementById('priceChart')
+  if(priceCtx) {
+    const priceChart = new Chart(priceCtx, {
+      type:'line',
+      data:{
+        labels:['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets:[{label:'Wheat ₹/qtl', data:demo.prices?.wheat || [2000, 2100, 2200, 2150, 2300, 2400], borderColor:'#2e7d32', backgroundColor:'rgba(46,125,50,0.08)', tension:0.3}]
+      },
+      options:{plugins:{legend:{display:false}}}
+    })
+  }
+} catch(e) {
+  console.error('Error initializing price chart:', e)
+}
 
 // Map (Leaflet)
-const map = L.map('map',{center:[26.9,75.8],zoom:9})
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:''}).addTo(map)
-demo.fields.forEach(f=>{
-  const m = L.marker([f.lat,f.lon]).addTo(map).bindPopup(`<strong>${f.name}</strong><br>Crop: ${f.crop}<br><button onclick="zoomTo(${f.lat},${f.lon})">Zoom</button>`)
-})
-window.zoomTo = (lat,lon)=> map.setView([lat,lon],13)
+try {
+  const mapElement = document.getElementById('map')
+  if(mapElement && window.L) {
+    const map = L.map('map',{center:[26.9,75.8],zoom:9})
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:''}).addTo(map)
+    (demo.fields || []).forEach(f=>{
+      const m = L.marker([f.lat,f.lon]).addTo(map).bindPopup(`<strong>${f.name}</strong><br>Crop: ${f.crop}<br><button onclick="zoomTo(${f.lat},${f.lon})">Zoom</button>`)
+    })
+    window.zoomTo = (lat,lon)=> map.setView([lat,lon],13)
+  }
+} catch(e) {
+  console.error('Error initializing map:', e)
+}
 
 // simple AI suggestions
 function generateAdvice(){
-  const opts = [
-    'Irrigate Field A tomorrow morning (2 hours).',
-    'Apply phosphorus fertilizer in Field B within 3 days.',
-    'Hold sale: wheat prices expected to rise in 7–10 days.'
-  ]
-  const pick = opts[Math.floor(Math.random()*opts.length)]
-  document.getElementById('aiAdvice').textContent = pick
-  demo.activity.unshift({t:'AI: '+pick, ts:Date.now()})
-  localStorage.setItem('agri_demo', JSON.stringify(demo))
-  renderActivity()
+  try {
+    const opts = [
+      'Irrigate Field A tomorrow morning (2 hours).',
+      'Apply phosphorus fertilizer in Field B within 3 days.',
+      'Hold sale: wheat prices expected to rise in 7–10 days.'
+    ]
+    const pick = opts[Math.floor(Math.random()*opts.length)]
+    const aiAdvice = document.getElementById('aiAdvice')
+    if(aiAdvice) aiAdvice.textContent = pick
+    demo.activity = demo.activity || []
+    demo.activity.unshift({t:'AI: '+pick, ts:Date.now()})
+    localStorage.setItem('agri_demo', JSON.stringify(demo))
+    renderActivity()
+  } catch(e) {
+    console.error('Error generating advice:', e)
+  }
 }
-function saveAdvice(){ toast('Advice saved locally') }
+
+function saveAdvice(){ 
+  try {
+    toast('Advice saved locally')
+  } catch(e) {
+    console.error('Error saving advice:', e)
+  }
+}
+
 generateAdvice()
 
 // small utilities
 function genTimeSeries(n,base,amp){
   return Array.from({length:n}, (_,i)=> Math.round(base + Math.sin(i/2)*amp + (Math.random()-0.5)*amp/1.5))
 }
-function navigateTo(url){ location.href = url }
+
+function navigateTo(url){ 
+  try {
+    location.href = url
+  } catch(e) {
+    console.error('Navigation error:', e)
+  }
+}

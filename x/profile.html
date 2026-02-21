@@ -48,29 +48,58 @@
 
   <script src="app.js"></script>
   <script>
-    const curr = ensureAuth()
-    document.getElementById('profileName').value = curr.name
-    document.getElementById('profileEmail').value = curr.email
-    document.getElementById('profileLocation').value = curr.profile?.farm || ''
-    document.getElementById('profileSize').value = curr.profile?.size || ''
+    try {
+      const curr = ensureAuth()
+      document.getElementById('profileName').value = curr.name || ''
+      document.getElementById('profileEmail').value = curr.email || ''
+      document.getElementById('profileLocation').value = curr.profile?.farm || ''
+      document.getElementById('profileSize').value = curr.profile?.size || ''
+    } catch(e) {
+      console.error('Profile init error:', e)
+      location.href='auth.html'
+    }
 
     function saveProfile(){
-      const users = getUsers()
-      const u = users.find(x=>x.email===curr.email)
-      u.name = document.getElementById('profileName').value.trim()
-      u.profile = {farm: document.getElementById('profileLocation').value.trim(), size: document.getElementById('profileSize').value.trim()}
-      saveUsers(users)
-      toast('Profile updated')
-      location.reload()
+      try {
+        const name = document.getElementById('profileName').value.trim()
+        const location = document.getElementById('profileLocation').value.trim()
+        const size = document.getElementById('profileSize').value.trim()
+        
+        if(!name) { toast('Name is required', 3000); return }
+        if(name.length < 3) { toast('Name must be at least 3 characters', 3000); return }
+        
+        const users = getUsers()
+        const u = users.find(x=>x.email===curr.email)
+        if(!u) { toast('User not found', 3000); return }
+        
+        u.name = name
+        u.profile = {farm: location, size: size}
+        saveUsers(users)
+        toast('Profile updated')
+        location.reload()
+      } catch(e) {
+        console.error('Save profile error:', e)
+        toast('Failed to save profile', 3000)
+      }
     }
 
     // saved predictions
-    const sp = JSON.parse(localStorage.getItem('savedPredictions')||'[]')
-    document.getElementById('savedPred').innerHTML = sp.length ? sp.map(s=>`<div style="padding:8px 0"><strong>${s.crop}</strong> — ${s.date}</div>`).join('') : '<div class="muted">No saved predictions</div>'
+    try {
+      const sp = JSON.parse(localStorage.getItem('savedPredictions')||'[]')
+      document.getElementById('savedPred').innerHTML = sp.length ? sp.map(s=>`<div style="padding:8px 0"><strong>${s.crop || 'Unknown'}</strong> — ${s.date || 'N/A'}</div>`).join('') : '<div class="muted">No saved predictions</div>'
+    } catch(e) {
+      console.error('Error loading predictions:', e)
+      document.getElementById('savedPred').innerHTML = '<div class="muted">Error loading predictions</div>'
+    }
 
     // bookings
-    const bookings = JSON.parse(localStorage.getItem('bookings')||'[]')
-    document.getElementById('bookingHist').innerHTML = bookings.length ? bookings.map(b=>`<div style="padding:8px 0"><strong>${b.item}</strong> • ${b.dates} • <span style="background:#efefef;padding:6px;border-radius:8px">${b.cost ? '₹'+b.cost : '—'}</span></div>`).join('') : '<div class="muted">No bookings</div>'
+    try {
+      const bookings = JSON.parse(localStorage.getItem('bookings')||'[]')
+      document.getElementById('bookingHist').innerHTML = bookings.length ? bookings.map(b=>`<div style="padding:8px 0"><strong>${b.item || 'Unknown'}</strong> • ${b.dates || 'N/A'} • <span style="background:#efefef;padding:6px;border-radius:8px">${b.cost ? '₹'+b.cost : '—'}</span></div>`).join('') : '<div class="muted">No bookings</div>'
+    } catch(e) {
+      console.error('Error loading bookings:', e)
+      document.getElementById('bookingHist').innerHTML = '<div class="muted">Error loading bookings</div>'
+    }
   </script>
 </body>
 </html>

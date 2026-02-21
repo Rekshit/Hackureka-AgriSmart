@@ -17,7 +17,8 @@
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
         <div>
           <label>Crop</label>
-          <select id="cropSelect">
+          <select id="cropSelect" required>
+            <option value="">-- Select Crop --</option>
             <option value="wheat">Wheat</option>
             <option value="rice">Rice</option>
             <option value="tomato">Tomato</option>
@@ -25,14 +26,15 @@
         </div>
         <div>
           <label>Location</label>
-          <select id="locSelect">
+          <select id="locSelect" required>
+            <option value="">-- Select Location --</option>
             <option value="indore">Indore (MP)</option>
             <option value="ludhiana">Ludhiana (Punjab)</option>
           </select>
         </div>
         <div>
           <label>Harvest date</label>
-          <input id="harvestDate" type="date">
+          <input id="harvestDate" type="date" required>
         </div>
       </div>
 

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriSmart - Analytics</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.analytics-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.stat-box{
+  background:#f3f6ef;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+  font-weight:700;
+}
+
+.stat-value{
+  font-size:28px;
+}
+
+@media(max-width:900px){
+  .analytics-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="insertHeader"></div>
+
+<main class="container">
+
+<h2>📊 Analytics & Reports</h2>
+<p class="muted">Comprehensive farming performance insights</p>
+
+<!-- Profit Chart -->
+<div class="card">
+<h3>Crop Profit Estimation (₹/acre)</h3>
+<canvas id="profitChart" height="120"></canvas>
+</div>
+
+<!-- Accuracy + Trends -->
+<div class="analytics-grid">
+
+<div class="card">
+<h3>Prediction Accuracy</h3>
+
+<div class="analytics-grid">
+<div class="stat-box">
+<div class="stat-value" style="color:green">87%</div>
+Market Price
+</div>
+
+<div class="stat-box">
+<div class="stat-value" style="color:orange">82%</div>
+Crop Yield
+</div>
+
+<div class="stat-box">
+<div class="stat-value" style="color:red">91%</div>
+Pest Risk
+</div>
+
+<div class="stat-box">
+<div class="stat-value" style="color:#6aa96a">78%</div>
+Resource
+</div>
+</div>
+
+</div>
+
+<div class="card">
+<h3>Seasonal Yield Trends</h3>
+<canvas id="yieldChart"></canvas>
+</div>
+
+</div>
+
+<!-- Resource Usage -->
+<div class="card">
+<h3>Resource Usage Reports</h3>
+<canvas id="resourceChart"></canvas>
+</div>
+
+</main>
+
+<script src="app.js"></script>
+<script src="analytics.js"></script>
+</body>
+</html>
