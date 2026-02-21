@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body style="text-align:center;font-family:Arial;">
+    <h2>🌾 Crop Price 15-Day Forecast</h2>
+
+    <select id="cropSelect" onchange="getPrediction()">
+        <option value="Wheat">Wheat</option>
+        <option value="Millet">Millet</option>
+        <option value="Sunflower">Sunflower</option>
+        <option value="Cotton">Cotton</option>
+        <option value="Maize">Maize</option>
+    </select>
+
+    <br><br>
+    <button onclick="getPrediction()">Generate Prediction</button>
+
+    <table border="1" style="margin:auto;margin-top:20px;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Predicted Price</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <canvas id="priceChart" width="800" height="400"></canvas>
+
+    <script>
+        let chart;
+
+        const cropColors = {
+            "Wheat": "red",
+            "Millet": "blue",
+            "Sunflower": "orange",
+            "Cotton": "green",
+            "Maize": "purple"
+        };
+
+        function getPrediction() {
+            let crop = document.getElementById("cropSelect").value;
+
+            fetch(`http://127.0.0.1:5000/predict?crop=${crop}&t=${new Date().getTime()}`)
+            .then(response => response.json())
+            .then(data => {
+                let tableBody = document.getElementById("tableBody");
+                tableBody.innerHTML = "";
+
+                let labels = [];
+                let prices = [];
+
+                data.forEach(item => {
+                    labels.push(item.date);
+                    prices.push(item.predicted_price);
+
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${item.date}</td>
+                            <td>${item.predicted_price}</td>
+                        </tr>`;
+                });
+
+                drawChart(labels, prices, cropColors[crop]);
+            })
+            .catch(err => console.error("Error fetching predictions:", err));
+        }
+
+        function drawChart(labels, prices, color) {
+            const ctx = document.getElementById("priceChart");
+
+            if(chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Predicted Price',
+                        data: prices,
+                        borderColor: color || 'red',  // Line color
+                        fill: false,                 // No area fill under line
+                        tension: 0.3                 // Smooth line
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true }
+                    },
+                    scales: {
+                        y: { beginAtZero: false },
+                        x: { display: true }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
