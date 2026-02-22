@@ -10,51 +10,330 @@
 <body>
   <div class="insertHeader"></div>
   <main class="container">
-    <div class="card">
-      <h2>Predictions</h2>
-      <p class="muted">Choose a crop and location to generate a quick market and demand estimate (demo)</p>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
-        <div>
-          <label>Crop</label>
-          <select id="cropSelect" required>
-            <option value="">-- Select Crop --</option>
-            <option value="wheat">Wheat</option>
-            <option value="rice">Rice</option>
-            <option value="tomato">Tomato</option>
-          </select>
-        </div>
-        <div>
-          <label>Location</label>
-          <select id="locSelect" required>
-            <option value="">-- Select Location --</option>
-            <option value="indore">Indore (MP)</option>
-            <option value="ludhiana">Ludhiana (Punjab)</option>
-          </select>
-        </div>
-        <div>
-          <label>Harvest date</label>
-          <input id="harvestDate" type="date" required>
-        </div>
-      </div>
-
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="btn primary" onclick="runPrediction()">Run prediction</button>
-        <button class="btn" onclick="savePrediction()">Save</button>
+    <div class="card" style="background:linear-gradient(135deg,#ffffff,#f8fcf6);border-left:4px solid #2e7d32">
+      <h2 style="margin-top:0;color:#1a3a1a">📊 Predictions</h2>
+      <p class="muted">AI-powered insights for smarter farming decisions</p>
+      
+      <!-- Tab Navigation -->
+      <div style="display:flex;gap:12px;margin-top:16px;border-bottom:3px solid #e0e0e0;padding-bottom:0px;overflow-x:auto">
+        <button class="tab-btn active" onclick="switchTab('market')" style="border-bottom:3px solid #2e7d32;color:#2e7d32">📈 Market & Price</button>
+        <button class="tab-btn" onclick="switchTab('crop')">🌱 Crop & Seed</button>
+        <button class="tab-btn" onclick="switchTab('risk')">⚠️ Risk</button>
+        <button class="tab-btn" onclick="switchTab('resource')">💧 Resource</button>
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+    <!-- Market & Price Tab -->
+    <div id="market-tab" class="tab-content active">
       <div class="card">
-        <h3>Price Forecast</h3>
-        <canvas id="priceForecast"></canvas>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label>Crop</label>
+            <select id="cropSelect" required>
+              <option value="">Select crop</option>
+              <option value="wheat">Wheat</option>
+              <option value="rice">Rice</option>
+              <option value="tomato">Tomato</option>
+            </select>
+          </div>
+          <div>
+            <label>Location</label>
+            <select id="locSelect" required>
+              <option value="">Select location</option>
+              <option value="indore">Indore (MP)</option>
+              <option value="ludhiana">Ludhiana (Punjab)</option>
+            </select>
+          </div>
+          <div>
+            <label>Harvest date</label>
+            <input id="harvestDate" type="date" required>
+          </div>
+        </div>
+        <button class="btn primary" onclick="runPrediction()" style="width:100%">Run prediction</button>
       </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+        <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">📊 Price Forecast <span class="badge" style="background:#4caf50;color:white">87% confidence</span></h3>
+          <canvas id="priceForecast"></canvas>
+        </div>
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+          <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">📊 Demand Forecast</h3>
+          <canvas id="demandForecast"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px;background:#fff9c4;border-left:4px solid #fbc02d;padding:12px">
+        <strong>💡 Best Time to Sell</strong><br>
+        <span class="muted" id="bestTimeSell">Based on trends, selling in May-June could yield 15-20% higher returns than current prices</span>
+      </div>
+    </div>
+
+    <!-- Crop & Seed Tab -->
+    <div id="crop-tab" class="tab-content" style="display:none">
+      <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+        <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Soil & Location Inputs</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:12px">
+          <div>
+            <label>Nitrogen (kg/ha)</label>
+            <input id="nitrogen" type="number" value="120" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px">
+          </div>
+          <div>
+            <label>Phosphorus (kg/ha)</label>
+            <input id="phosphorus" type="number" value="60" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px">
+          </div>
+          <div>
+            <label>Potassium (kg/ha)</label>
+            <input id="potassium" type="number" value="80" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px">
+          </div>
+          <div>
+            <label>Location</label>
+            <select id="cropLocSelect" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px">
+              <option value="">Select location</option>
+              <option value="indore">Indore (MP)</option>
+              <option value="ludhiana">Ludhiana (Punjab)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+          <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Crop Suitability</h3>
+          <div id="cropSuitability" style="margin-top:12px"></div>
+        </div>
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+          <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Recommended Seed Varieties</h3>
+          <div id="seedVarieties" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Risk Tab -->
+    <div id="risk-tab" class="tab-content" style="display:none">
       <div class="card">
-        <h3>Demand Forecast</h3>
-        <canvas id="demandForecast"></canvas>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label>Crop</label>
+            <select id="riskCropSelect">
+              <option value="">Select crop</option>
+              <option value="wheat">Wheat</option>
+              <option value="rice">Rice</option>
+              <option value="tomato">Tomato</option>
+            </select>
+          </div>
+          <div>
+            <label>Location</label>
+            <select id="riskLocSelect">
+              <option value="">Select location</option>
+              <option value="indore">Indore (MP)</option>
+              <option value="ludhiana">Ludhiana (Punjab)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #ff6f00">
+          <h3 style="margin-top:0;border-bottom:2px solid #ff6f00;padding-bottom:12px;color:#1a3a1a">🔴 Pest/Disease Risk</h3>
+          <canvas id="riskChart" style="max-width:100%"></canvas>
+        </div>
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+          <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Prevention Suggestions</h3>
+          <div id="preventionSuggestions" style="margin-top:12px"></div>
+          <div style="margin-top:16px;padding:12px;background:#f5f5f5;border-radius:4px">
+            <strong>Chemical Guidance</strong>
+            <div id="chemicalGuidance" style="margin-top:8px;font-size:0.9em"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource Tab -->
+    <div id="resource-tab" class="tab-content" style="display:none">
+      <div class="card">
+        <h3>Growth Stage & Soil</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+          <div>
+            <label>Growth Stage</label>
+            <select id="growthStage">
+              <option value="">Select stage</option>
+              <option value="seedling">Seedling</option>
+              <option value="vegetative">Vegetative</option>
+              <option value="flowering">Flowering</option>
+              <option value="filling">Filling</option>
+              <option value="harvest">Harvest</option>
+            </select>
+          </div>
+          <div>
+            <label>Soil pH: <span id="soilPhValue">6.5</span></label>
+            <input id="soilPh" type="range" min="4" max="8" step="0.1" value="6.5" style="width:100%" onchange="document.getElementById('soilPhValue').textContent=this.value">
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+          <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Nutrient Uptake</h3>
+          <canvas id="nutrientChart"></canvas>
+        </div>
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff);border-left:4px solid #2e7d32">
+          <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">📊 Fertilizer Efficiency</h3>
+          <div id="fertilizerEfficiency" style="margin-top:12px"></div>
+          <div style="margin-top:16px;padding:12px;background:#fff3e0;border-radius:4px">
+            <strong>💰 Cost Optimization</strong>
+            <div class="muted" style="margin-top:8px;font-size:0.9em">Switch to split application of Urea (3 doses) to save ₹11,200/acre while improving uptake by 15%</div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
+
+  <style>
+    .tab-btn {
+      padding: 12px 18px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-size: 15px;
+      color: #6b7d6b;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      position: relative;
+    }
+    .tab-btn:hover {
+      color: #2e7d32;
+      background: rgba(46, 125, 50, 0.05);
+      border-bottom-color: #2e7d32;
+    }
+    .tab-btn.active {
+      color: #2e7d32;
+      border-bottom-color: #2e7d32;
+      background: rgba(46, 125, 50, 0.05);
+      font-weight: 600;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: white;
+      margin-left: 8px;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+    }
+    .crop-suit-item {
+      margin-bottom: 14px;
+    }
+    .crop-suit-name {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #1a3a1a;
+      font-size: 14px;
+    }
+    .crop-suit-bar {
+      width: 100%;
+      height: 24px;
+      background: linear-gradient(to right, #e8f5e9, #f0f6f0);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #c8e6c9;
+    }
+    .crop-suit-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50, #2e7d32);
+      transition: width 0.4s ease;
+      border-radius: 5px;
+    }
+    .seed-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, #f0f7ed, #f8fcf6);
+      border-radius: 6px;
+      border-left: 3px solid #4caf50;
+      transition: all 0.3s ease;
+    }
+    .seed-item:hover {
+      background: linear-gradient(to right, #e8f5e9, #f0f6f0);
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.1);
+    }
+    .seed-name {
+      font-weight: 600;
+      color: #1a3a1a;
+    }
+    .seed-type {
+      font-size: 0.85em;
+      color: #6b7d6b;
+      margin: 2px 0;
+    }
+    .seed-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      margin-top: 6px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
+    }
+    .prevention-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 3px solid #ff6f00;
+      background: #fff3e0;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    .prevention-item:hover {
+      box-shadow: 0 4px 12px rgba(255, 111, 0, 0.15);
+      transform: translateX(2px);
+    }
+    .prevention-high {
+      border-left-color: #ff6f00;
+      background: #fff3e0;
+    }
+    .prevention-medium {
+      border-left-color: #ffb74d;
+      background: #ffe0b2;
+    }
+    .fert-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .fert-name {
+      flex: 1;
+      font-weight: 600;
+      color: #1a3a1a;
+    }
+    .fert-bar {
+      flex: 2;
+      height: 24px;
+      background: linear-gradient(to right, #e8f5e9, #f0f6f0);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 0 12px;
+      border: 1px solid #c8e6c9;
+    }
+    .fert-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50, #2e7d32);
+      border-radius: 5px;
+    }
+    .fert-percent {
+      width: 40px;
+      text-align: right;
+      font-weight: 600;
+      color: #1a3a1a;
+    }
+  </style>
 
   <script src="app.js"></script>
   <script src="predictions.js"></script>

@@ -9,21 +9,23 @@
 
 <body>
     <div class="container">
-        <h2>🛒 Equipment Marketplace</h2>
-        <p class="subtitle">Browse and rent farming equipment near you</p>
+        <div style="background:linear-gradient(135deg,#ffffff,#f8fcf6);border-left:4px solid #2e7d32;padding:20px;border-radius:12px;margin-bottom:24px;box-shadow:0 4px 12px rgba(46,125,50,0.1)">
+            <h2 style="margin:0 0 6px 0;color:#1a3a1a">🛒 Equipment Marketplace</h2>
+            <p class="subtitle" style="margin:0;color:#6b7d6b;font-size:14px">Browse and rent farming equipment near you</p>
+        </div>
 
 <!-- FILTERS -->
-    <div class="filters">
-        <input id="search" type="text" placeholder="Search equipment..." required />
-        <select id="location" required>
-            <option value="">All Locations</option>
+    <div class="filters" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;padding:16px;background:#fafcf8;border-radius:8px;border:1px solid #e6eee6">
+        <input id="search" type="text" placeholder="🔍 Search equipment..." style="padding:12px;border:2px solid #e6eee6;border-radius:8px;font-size:14px" />
+        <select id="location" style="padding:12px;border:2px solid #e6eee6;border-radius:8px;font-size:14px">
+            <option value="">📍 All Locations</option>
             <option>Punjab</option>
             <option>Haryana</option>
             <option>UP</option>
             <option>Maharashtra</option>
             <option>MP</option>
         </select>
-        <select id="status" required>
+        <select id="status" style="padding:12px;border:2px solid #e6eee6;border-radius:8px;font-size:14px">
             <option value="all">All Status</option>
             <option value="available">Available</option>
             <option value="booked">Booked</option>

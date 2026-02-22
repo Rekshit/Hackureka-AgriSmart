@@ -14,24 +14,24 @@
 
   <main class="container" id="main">
     <!-- Hero: important, action first -->
-    <section id="hero" class="card" style="display:flex;justify-content:space-between;align-items:flex-start;gap:18px">
+    <section id="hero" class="card" style="display:flex;justify-content:space-between;align-items:flex-start;gap:18px;background:linear-gradient(135deg,#ffffff 0%,#f8fcf6 100%);border-left:4px solid #2e7d32">
       <div>
-        <h2 id="heroTitle">Welcome back, Farmer</h2>
-        <p id="heroSummary" class="muted">Your farm status at a glance</p>
+        <h2 id="heroTitle" style="margin:0 0 8px 0;font-size:28px;color:#1a3a1a">🌾 Welcome back, Farmer</h2>
+        <p id="heroSummary" class="muted" style="margin:0 0 16px 0">Your farm status at a glance</p>
         <div style="display:flex;gap:12px;margin-top:12px">
-          <button class="btn primary" onclick="navigateTo('predictions.html')">Start Prediction</button>
-          <button class="btn alt" onclick="navigateTo('marketplace.html')">Rent Equipment</button>
+          <button class="btn primary" onclick="navigateTo('predictions.html')">📊 Start Prediction</button>
+          <button class="btn alt" onclick="navigateTo('marketplace.html')">🚜 Rent Equipment</button>
         </div>
       </div>
 
       <div style="min-width:220px">
-        <div class="card" style="padding:12px;margin-bottom:10px">
-          <div style="font-weight:700">Today's weather</div>
-          <div class="muted" id="weatherBox">Loading…</div>
+        <div class="card" style="padding:14px;margin-bottom:10px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:none;box-shadow:0 4px 12px rgba(46,125,50,0.1)">
+          <div style="font-weight:700;color:#1b5e20;font-size:14px">☀️ Today's weather</div>
+          <div class="muted" id="weatherBox" style="margin-top:6px;color:#2e7d32;font-weight:500">Loading…</div>
         </div>
-        <div class="card" style="padding:12px">
-          <div style="font-weight:700">Farm priority</div>
-          <div id="priorityBox" class="muted">Loading…</div>
+        <div class="card" style="padding:14px;background:linear-gradient(135deg,#fff9c4,#ffe082);border:none;box-shadow:0 4px 12px rgba(255,152,0,0.1)">
+          <div style="font-weight:700;color:#e65100;font-size:14px">⚡ Farm priority</div>
+          <div id="priorityBox" class="muted" style="margin-top:6px;color:#f57f17;font-weight:500">Loading…</div>
         </div>
       </div>
     </section>
@@ -39,21 +39,24 @@
     <!-- KPI row -->
     <section class="kpis">
       <div class="kpi card">
+        <div style="width:50px;height:50px;background:linear-gradient(135deg,#4caf50,#2e7d32);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff">🌱</div>
         <div>
-          <div class="muted">Total Crops</div>
-          <div style="font-size:22px;font-weight:700" id="kCrops">--</div>
+          <div class="muted" style="font-size:12px">Total Crops</div>
+          <div style="font-size:24px;font-weight:700;color:#1a3a1a" id="kCrops">--</div>
         </div>
       </div>
       <div class="kpi card">
+        <div style="width:50px;height:50px;background:linear-gradient(135deg,#2196F3,#1976D2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff">📈</div>
         <div>
-          <div class="muted">Active Predictions</div>
-          <div style="font-size:22px;font-weight:700" id="kPred">--</div>
+          <div class="muted" style="font-size:12px">Active Predictions</div>
+          <div style="font-size:24px;font-weight:700;color:#1a3a1a" id="kPred">--</div>
         </div>
       </div>
       <div class="kpi card">
+        <div style="width:50px;height:50px;background:linear-gradient(135deg,#FF9800,#F57C00);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff">🚜</div>
         <div>
-          <div class="muted">Equipment Bookings</div>
-          <div style="font-size:22px;font-weight:700" id="kBook">--</div>
+          <div class="muted" style="font-size:12px">Equipment Bookings</div>
+          <div style="font-size:24px;font-weight:700;color:#1a3a1a" id="kBook">--</div>
         </div>
       </div>
     </section>
@@ -61,29 +64,29 @@
     <!-- Panels -->
     <section style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
       <div>
-        <div class="card">
-          <h3>Price Trend (Wheat)</h3>
+        <div class="card" style="background:linear-gradient(to bottom,#fafcf8,#ffffff)">
+          <h3 style="margin-top:0;color:#1a3a1a;border-bottom:2px solid #2e7d32;padding-bottom:12px">📊 Price Trend (Wheat)</h3>
           <canvas id="priceChart" height="160"></canvas>
         </div>
 
-        <div class="card" style="margin-top:12px">
-          <h3>Activity</h3>
+        <div class="card" style="margin-top:12px;background:linear-gradient(to bottom,#fafcf8,#ffffff)">
+          <h3 style="margin-top:0;color:#1a3a1a;border-bottom:2px solid #2e7d32;padding-bottom:12px">⏱️ Activity</h3>
           <ul class="timeline" id="activityList"></ul>
         </div>
       </div>
 
       <div>
-        <div id="mapPanel" class="card" style="height:300px;padding:8px">
-          <h3 style="margin-top:0">Fields</h3>
-          <div id="map" style="height:220px;border-radius:8px"></div>
+        <div id="mapPanel" class="card" style="height:340px;padding:12px;background:linear-gradient(to bottom,#fafcf8,#ffffff)">
+          <h3 style="margin-top:0;color:#1a3a1a;border-bottom:2px solid #2e7d32;padding-bottom:12px">🗺️ Fields</h3>
+          <div id="map" style="height:260px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1)"></div>
         </div>
 
-        <div class="card" style="margin-top:12px">
-          <h3>Smart Recommendation</h3>
-          <div id="aiAdvice">Loading suggestions…</div>
-          <div style="margin-top:8px;display:flex;gap:8px">
-            <button class="btn" onclick="generateAdvice()">New</button>
-            <button class="btn" onclick="saveAdvice()">Save</button>
+        <div class="card" style="margin-top:12px;background:linear-gradient(135deg,#f0f7ff,#ffffff);border-left:4px solid #2196F3">
+          <h3 style="margin-top:0;color:#1a3a1a;margin-bottom:12px">💡 Smart Recommendation</h3>
+          <div id="aiAdvice" style="padding:12px;background:#e3f2fd;border-radius:8px;color:#1565c0;line-height:1.6;font-size:14px;margin-bottom:12px">Loading suggestions…</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn primary" onclick="generateAdvice()" style="flex:1">🔄 New</button>
+            <button class="btn alt" onclick="saveAdvice()" style="flex:1">💾 Save</button>
           </div>
         </div>
       </div>
