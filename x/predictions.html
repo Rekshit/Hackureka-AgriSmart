@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -120,6 +120,11 @@
             </select>
           </div>
         </div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button id="cropSeedPredictBtn" class="btn primary" type="button">Predict Crop & Seed</button>
+          <span id="cropSeedLoading" class="muted" style="display:none">Fetching AI recommendations...</span>
+          <span id="cropSeedError" style="display:none;color:#c62828;font-size:0.9em"></span>
+        </div>
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
@@ -131,6 +136,10 @@
           <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Recommended Seed Varieties</h3>
           <div id="seedVarieties" style="margin-top:12px"></div>
         </div>
+      </div>
+      <div class="card" style="margin-top:12px;background:#f1f8ed;border-left:4px solid #2e7d32">
+        <h3 style="margin-top:0;border-bottom:2px solid #2e7d32;padding-bottom:12px;color:#1a3a1a">Advice</h3>
+        <div id="cropAdvice" class="muted">Enter NPK values, then run prediction.</div>
       </div>
     </div>
 
