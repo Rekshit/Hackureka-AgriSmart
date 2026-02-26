@@ -298,7 +298,7 @@ function getCropSeedInputs() {
   const nitrogen = Number(document.getElementById('nitrogen')?.value)
   const phosphorus = Number(document.getElementById('phosphorus')?.value)
   const potassium = Number(document.getElementById('potassium')?.value)
-  const crop = String(document.getElementById('cropSelect')?.value || 'Wheat').trim() || 'Wheat'
+  const crop = String(document.getElementById('seedCropSelect')?.value || 'Wheat').trim() || 'Wheat'
 
   return { nitrogen, phosphorus, potassium, crop }
 }
